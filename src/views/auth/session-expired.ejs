@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Session Expired',
+                    text: 'Your session has expired. Please login again.',
+                }).then(() => {
+                    window.location.href = "/auth/login";
+                });
+            });
+        </script>
+    </body>
+
+</html>

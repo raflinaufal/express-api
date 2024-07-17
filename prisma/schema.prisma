@@ -1,0 +1,45 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String?
+  role      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  profile   Profile?  // Relasi satu-ke-satu dengan Profile
+  profileId Int?      // Foreign key ke Profile
+  blogs     Blog[]    // Relasi one-to-many dengan Blog
+}
+
+model Profile {
+  id        Int       @id @default(autoincrement())
+  fullName  String?
+  address   String?
+  image     String?   // URL gambar profil
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    Int       @unique
+}
+
+model Blog {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  image     String?   // URL gambar blog
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  authorId  Int       // Foreign key ke User
+
+  author    User      @relation(fields: [authorId], references: [id])
+}

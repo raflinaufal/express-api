@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/header') %>
+
+    <body class="bg-gradient-primary">
+        <div class="container">
+            <!-- Outer Row -->
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-12 col-md-9">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="p-5">
+                                        <div class="text-center">
+                                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                        </div>
+                                        <form class="user" id="register-form" action="/auth/register" method="POST">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user" id="name"
+                                                    name="name" placeholder="Full Name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="email" class="form-control form-control-user" id="email"
+                                                    name="email" aria-describedby="emailHelp"
+                                                    placeholder="Email Address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control form-control-user"
+                                                    id="password" name="password" placeholder="Password" required>
+                                            </div>
+                                            <button type="submit"
+                                                class="btn btn-primary btn-user btn-block">Register</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const registerForm = document.getElementById("register-form");
+
+                    if (registerForm) {
+                        registerForm.addEventListener("submit", async (event) => {
+                            event.preventDefault();
+                            const name = document.getElementById("name").value;
+                            const email = document.getElementById("email").value;
+                            const password = document.getElementById("password").value;
+
+                            try {
+                                const response = await fetch("/auth/register", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ name, email, password }),
+                                });
+
+                                const data = await response.json();
+                                if (response.ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Registration Successful',
+                                        text: 'You can now login with your new account.',
+                                    }).then(() => {
+                                        window.location.href = "/auth/login";
+                                    });
+                                } else {
+                                    const errorMessages = data.errors.map(err => `<p>${err.msg}</p>`).join('');
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Registration Failed',
+                                        html: errorMessages,
+                                    });
+                                }
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Registration Failed',
+                                    text: 'An error occurred while registering',
+                                });
+                            }
+                        });
+                    }
+                });
+            </script>
+    </body>
+
+</html>
