@@ -1,104 +1,79 @@
-### Register a User
-POST http://localhost:5000/auth/register
+### Create User
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "john.doe@example.com",
   "password": "password123",
-  "name": "Test User"
+  "name": "John Doe",
+  "role": "admin"
 }
 
-###
+### Get All Users
+GET http://localhost:5000/users
+Content-Type: application/json
 
-### Login a User
-POST http://localhost:5000/auth/login
+### Get User by ID
+GET http://localhost:5000/users/1
+Content-Type: application/json
+
+### Update User
+PUT http://localhost:5000/users/1
 Content-Type: application/json
 
 {
-  "email": "rafli@gmail.com",
-  "password": "password123"
+  "email": "john.updated@example.com",
+  "name": "John Updated",
+  "role": "user"
 }
 
-###
+### Delete User
+DELETE http://localhost:5000/users/1
+Content-Type: application/json
 
-### Create a Blog
+### Create or Update Profile
+POST http://localhost:5000/profiles/5
+Content-Type: application/json
+
+{
+  "fullName": "rafli",
+  "address": "123 Main St",
+  "image": "http://example.com/image.jpg"
+}
+
+### Get Profile by User ID
+GET http://localhost:5000/profiles/5
+Content-Type: application/json
+
+### Create Blog
 POST http://localhost:5000/blogs
 Content-Type: application/json
 
 {
-  "title": "Test Blog",
-  "content": "This is a test blog.",
-  "authorId": 1
+  "title": "My First Blog",
+  "content": "This is the content of my first blog.",
+  "image": "http://example.com/blog-image.jpg",
+  "authorId": 45
 }
-
 
 ### Get All Blogs
 GET http://localhost:5000/blogs
 Content-Type: application/json
 
-###
-
-### Get a Single Blog by ID
+### Get Blog by ID
 GET http://localhost:5000/blogs/1
 Content-Type: application/json
 
-###
-
-### Update a Blog
+### Update Blog
 PUT http://localhost:5000/blogs/1
 Content-Type: application/json
-# Authorization: Bearer {{token}}
 
 {
-  "title": "Updated Test Blog",
-  "content": "This is an updated test blog.",
-  "image": "https://example.com/image.png"
+  "title": "Updated Blog Title",
+  "content": "This is the updated content of the blog.",
+  "image": "http://example.com/updated-blog-image.jpg"
 }
 
-###
-
-### Delete a Blog
+### Delete Blog
 DELETE http://localhost:5000/blogs/1
 Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-###
-
-### Get Profile
-GET http://localhost:5000/profile
-Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-###
-
-### Create Profile
-POST http://localhost:5000/profile
-Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-{
-  "fullName": "Test User",
-  "address": "123 Test St",
-  "image": "https://example.com/image.png",
-  "userId": 1
-}
-
-###
-
-### Update Profile
-PUT http://localhost:5000/profile/1
-Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-{
-  "fullName": "Updated Test User",
-  "address": "123 Updated Test St",
-  "image": "https://example.com/updated-image.png"
-}
-
-###
-
-### Delete Profile
-DELETE http://localhost:5000/profile/1
-Content-Type: application/json
-# Authorization: Bearer {{token}}

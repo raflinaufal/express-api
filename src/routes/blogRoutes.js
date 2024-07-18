@@ -1,6 +1,7 @@
 import express from "express";
+
 import {
-  getBlogs,
+  getAllBlogs,
   getBlogById,
   createBlog,
   updateBlog,
@@ -9,10 +10,10 @@ import {
 
 const router = express.Router();
 
-router.get("/", getBlogs);
+router.get("/", getAllBlogs);
 router.get("/:id", getBlogById);
-router.post("/", createBlog);
-router.put("/:id", updateBlog);
-router.delete("/:id", deleteBlog);
+router.post("/", createBlog); // Hanya admin yang dapat membuat blog baru
+router.put("/:id", updateBlog); // Hanya admin yang dapat memperbarui blog
+router.delete("/:id", deleteBlog); // Hanya admin yang dapat menghapus blog
 
 export default router;

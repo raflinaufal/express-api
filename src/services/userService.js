@@ -1,28 +1,79 @@
 import prisma from "../utils/prismaClient.js";
 import { hashPassword } from "../utils/hashUtil.js";
 
+// Mendapatkan semua pengguna tanpa field password
 export const getAllUsers = async () => {
-  return await prisma.user.findMany();
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 };
 
+// Mendapatkan pengguna berdasarkan ID tanpa field password
 export const getUserById = async (id) => {
-  return await prisma.user.findUnique({ where: { id: parseInt(id) } });
+  return await prisma.user.findUnique({
+    where: { id: parseInt(id, 10) },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 };
 
-export const createUser = async ({ name, email, password, role }) => {
+// Membuat pengguna baru tanpa field password dalam response
+export const createUser = async ({ email, password, name, role }) => {
   const hashedPassword = await hashPassword(password);
   return await prisma.user.create({
-    data: { name, email, password: hashedPassword, role },
+    data: {
+      email,
+      password: hashedPassword,
+      name,
+      role,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 };
 
-export const updateUser = async (id, { name, email, role }) => {
+// Memperbarui pengguna tanpa field password dalam response
+export const updateUser = async ({ id, email, name, role }) => {
   return await prisma.user.update({
-    where: { id: parseInt(id) },
-    data: { name, email, role },
+    where: { id: parseInt(id, 10) },
+    data: {
+      email,
+      name,
+      role,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 };
 
+// Menghapus pengguna
 export const deleteUser = async (id) => {
-  return await prisma.user.delete({ where: { id: parseInt(id) } });
+  await prisma.user.delete({
+    where: { id: parseInt(id, 10) },
+  });
 };

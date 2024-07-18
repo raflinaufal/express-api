@@ -12,7 +12,7 @@ export const generateToken = (user) => {
     role: user.role,
   };
 
-  return jwt.sign(payload, jwtSecret, { expiresIn: "1m" });
+  return jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
 };
 
 export const verifyToken = (token) => {

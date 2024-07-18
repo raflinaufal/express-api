@@ -1,6 +1,8 @@
 import express from "express";
+
 import {
-  getProfile,
+  getAllProfiles,
+  getProfileById,
   createProfile,
   updateProfile,
   deleteProfile,
@@ -8,9 +10,10 @@ import {
 
 const router = express.Router();
 
-router.get("/", getProfile);
-router.post("/", createProfile);
-router.put("/:userId", updateProfile);
-router.delete("/:userId", deleteProfile);
+router.get("/",  getAllProfiles);
+router.get("/:id",  getProfileById);
+router.post("/",  createProfile); // Hanya admin yang dapat membuat profil baru
+router.put("/:id",  updateProfile); // Hanya admin yang dapat memperbarui profil
+router.delete("/:id",  deleteProfile); // Hanya admin yang dapat menghapus profil
 
 export default router;

@@ -55,6 +55,7 @@
         </div>
 
         <%- include('../partials/footer') %>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
                     const loginForm = document.getElementById("login-form");
@@ -74,18 +75,22 @@
 
                                 const data = await response.json();
                                 if (response.ok) {
-                                    // Save token to session via server-side
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Login Successful',
-                                        text: 'You have successfully logged in.',
-                                    }).then(() => {
-                                        if (data.role === 'admin') {
+                                    // Check if the user has admin role
+                                    if (data.role === 'admin') {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Login Successful',
+                                            text: 'You have successfully logged in.',
+                                        }).then(() => {
                                             window.location.href = "/dashboard";
-                                        } else {
-                                            window.location.href = "/login";
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Access Denied',
+                                            text: 'You do not have permission to access the dashboard.',
+                                        });
+                                    }
                                 } else {
                                     const errorMessages = data.errors.map(err => `<p>${err.msg}</p>`).join('');
                                     Swal.fire({

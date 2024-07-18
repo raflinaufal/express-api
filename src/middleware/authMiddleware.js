@@ -1,35 +1,26 @@
-import { verifyToken } from "../utils/jwtUtil.js";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
+const jwtSecret = process.env.JWT_SECRET;
 
-const authMiddleware = (req, res, next) => {
-  const token = req.session.token;
-
+export const authMiddleware = (req, res, next) => {
+  const token = req.session.token; // Mengambil token dari sesi
   if (!token) {
-    return res.redirect("/auth/session-expired"); // Redirect to session expired page
+    return res.status(401).json({ error: "No token provided" });
   }
 
   try {
-    const decoded = verifyToken(token);
-    req.user = decoded;
+    const decoded = jwt.verify(token, jwtSecret);
+    req.user = decoded; // Menyimpan informasi pengguna yang didekodekan dalam request
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      req.session.destroy(); // Destroy the session
-      return res.redirect("/auth/session-expired"); // Redirect to session expired page
+      req.session.destroy(); // Menghapus sesi jika token telah kadaluarsa
+      return res.status(401).json({ error: "Token expired" });
     }
-    return res.redirect("/auth/session-expired"); // Redirect to session expired page
+    return res.status(401).json({ error: "Invalid token" });
   }
-};
-
-export const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res
-      .status(403)
-      .json({ error: "Access denied, admin role required" });
-  }
-  next();
 };
 
 export default authMiddleware;

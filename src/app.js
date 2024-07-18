@@ -6,10 +6,10 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
-import adminRoutes from "./routes/userRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -35,13 +35,14 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use("/auth", authRoutes);
-app.use("/admin", adminRoutes);
-app.use("/", dashboardRoutes);
-app.use("/blogs", blogRoutes);
-app.use("/profile", profileRoutes);
 
-app.use((req, res) => {
-  res.status(404).render("404");
+app.use("/", dashboardRoutes);
+app.use("/users", userRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/profiles", profileRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).render("404", { title: "404 - Page Not Found" });
 });
 
 export default app;

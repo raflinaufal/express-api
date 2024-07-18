@@ -1,28 +1,37 @@
-import { hashPassword } from "../utils/hashUtil.js";
-import prisma from "../utils/prismaClient.js";
+import * as userService from "../services/userService.js";
 
-// Get all users
+// Mendapatkan semua pengguna
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await userService.getAllUsers();
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 };
 
-// Create a new user
-export const createUser = async (req, res) => {
-  const { email, password, name, role } = req.body;
+// Mendapatkan pengguna berdasarkan ID
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const hashedPassword = await hashPassword(password); // Assume you have a hashPassword function
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-        role,
-      },
+    const user = await userService.getUserById(id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+};
+
+// Membuat pengguna baru
+export const createUser = async (req, res) => {
+  const { email, password, name, role, profile, blogs } = req.body;
+  try {
+    const user = await userService.createUser({
+      email,
+      password,
+      name,
+      role,
+      profile,
+      blogs,
     });
     res.status(201).json(user);
   } catch (error) {
@@ -30,14 +39,18 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Update a user
+// Memperbarui pengguna
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { email, name, role } = req.body;
+  const { email, name, role, profile, blogs } = req.body;
   try {
-    const user = await prisma.user.update({
-      where: { id: parseInt(id, 10) },
-      data: { email, name, role },
+    const user = await userService.updateUser({
+      id,
+      email,
+      name,
+      role,
+      profile,
+      blogs,
     });
     res.json(user);
   } catch (error) {
@@ -45,13 +58,11 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// Delete a user
+// Menghapus pengguna
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
-    await prisma.user.delete({
-      where: { id: parseInt(id, 10) },
-    });
+    await userService.deleteUser(id);
     res.status(204).send();
   } catch (error) {
     res.status(400).json({ error: "Failed to delete user" });

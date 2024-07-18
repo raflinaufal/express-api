@@ -1,93 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("login-form");
-  const registerForm = document.getElementById("register-form");
-
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const response = await fetch("/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Login Successful",
-            text: "You have successfully logged in.",
-          }).then(() => {
-            if (data.role === "admin") {
-              window.location.href = "/dashboard";
-            } else {
-              window.location.href = "/";
-            }
-          });
-        } else {
-          const errorMessages = data.errors
-            .map((err) => `<p>${err.msg}</p>`)
-            .join("");
-          Swal.fire({
-            icon: "error",
-            title: "Login Failed",
-            html: errorMessages,
-          });
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: "An error occurred while logging in",
-        });
-      }
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOMContentLoaded - Fetching user data");
+  try {
+    const response = await fetch("/dashboard/data", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
     });
-  }
 
-  if (registerForm) {
-    registerForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const response = await fetch("/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Registration Successful",
-            text: "You have successfully registered.",
-          }).then(() => {
-            window.location.href = "/auth/login";
-          });
-        } else {
-          const errorMessages = data.errors
-            .map((err) => `<p>${err.msg}</p>`)
-            .join("");
-          Swal.fire({
-            icon: "error",
-            title: "Registration Failed",
-            html: errorMessages,
-          });
-        }
-      } catch (error) {
+    if (response.status === 401) {
+      const data = await response.json();
+      console.log("Response 401 - Data:", data);
+      if (data.error === "Token expired" || data.error === "Session expired") {
         Swal.fire({
           icon: "error",
-          title: "Registration Failed",
-          text: "An error occurred while registering",
+          title: "Session Expired",
+          text: "Your session has expired. Please login again.",
+        }).then(() => {
+          window.location.href = "/auth/login";
         });
       }
+    } else if (response.ok) {
+      const data = await response.json();
+      console.log("Response OK - Data:", data);
+      document.getElementById("user-info").innerHTML = `
+                        <p>User ID: ${data.user.userId}</p>
+                        <p>Email: ${data.user.email}</p>
+                        <p>Name: ${data.user.name}</p>
+                        <p>Role: ${data.user.role}</p>
+                    `;
+    } else {
+      console.error("Failed to fetch user data");
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+});
+
+document.getElementById("logout-button").addEventListener("click", async () => {
+  console.log("Logout button clicked");
+  try {
+    const response = await fetch("/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Logout successful - Data:", data);
+      Swal.fire({
+        icon: "success",
+        title: "Logged Out",
+        text: data.message,
+      }).then(() => {
+        window.location.href = "/auth/login";
+      });
+    } else {
+      console.error("Logout failed");
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: "An error occurred while logging out",
+      });
+    }
+  } catch (error) {
+    console.error("Error during logout:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Logout Failed",
+      text: "An error occurred while logging out",
     });
   }
 });

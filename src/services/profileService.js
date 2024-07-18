@@ -1,22 +1,79 @@
 import prisma from "../utils/prismaClient.js";
 
-export const getProfile = async (userId) => {
-  return prisma.profile.findUnique({ where: { userId: parseInt(userId) } });
+// Mendapatkan semua profil tanpa menyertakan data pengguna terkait
+export const getAllProfiles = async () => {
+  return await prisma.profile.findMany({
+    select: {
+      id: true,
+      fullName: true,
+      address: true,
+      image: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 };
 
+// Mendapatkan profil berdasarkan ID tanpa menyertakan data pengguna terkait
+export const getProfileById = async (id) => {
+  return await prisma.profile.findUnique({
+    where: { id: parseInt(id, 10) },
+    select: {
+      id: true,
+      fullName: true,
+      address: true,
+      image: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+};
+
+// Membuat profil baru
 export const createProfile = async ({ fullName, address, image, userId }) => {
-  return prisma.profile.create({
-    data: { fullName, address, image, userId: parseInt(userId) },
+  return await prisma.profile.create({
+    data: {
+      fullName,
+      address,
+      image,
+      user: {
+        connect: { id: userId }, // Mengaitkan dengan pengguna terkait
+      },
+    },
+    select: {
+      id: true,
+      fullName: true,
+      address: true,
+      image: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 };
 
-export const updateProfile = async (userId, { fullName, address, image }) => {
-  return prisma.profile.update({
-    where: { userId: parseInt(userId) },
-    data: { fullName, address, image },
+// Memperbarui profil
+export const updateProfile = async ({ id, fullName, address, image }) => {
+  return await prisma.profile.update({
+    where: { id: parseInt(id, 10) },
+    data: {
+      fullName,
+      address,
+      image,
+    },
+    select: {
+      id: true,
+      fullName: true,
+      address: true,
+      image: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 };
 
-export const deleteProfile = async (userId) => {
-  await prisma.profile.delete({ where: { userId: parseInt(userId) } });
+// Menghapus profil
+export const deleteProfile = async (id) => {
+  await prisma.profile.delete({
+    where: { id: parseInt(id, 10) },
+  });
 };
