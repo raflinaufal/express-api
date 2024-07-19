@@ -1,0 +1,32 @@
+<%- include('partials/header', { title: 'User Form' }) %>
+
+    <h1>
+        <%= user ? 'Edit User' : 'Add New User' %>
+    </h1>
+    <form action="<%= user ? '/users/' + user.id + '?_method=PUT' : '/users' %>" method="POST">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="<%= user ? user.email : '' %>"
+                required>
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= user ? user.name : '' %>">
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select class="form-control" id="role" name="role" required>
+                <option value="user" <%=user && user.role==='user' ? 'selected' : '' %>>User</option>
+                <option value="admin" <%=user && user.role==='admin' ? 'selected' : '' %>>Admin</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" <%=user ? '' : 'required' %>>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <%= user ? 'Update' : 'Create' %> User
+        </button>
+    </form>
+
+    <%- include('partials/footer') %>

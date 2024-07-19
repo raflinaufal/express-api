@@ -1,5 +1,5 @@
 import express from "express";
-
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
   getAllProfiles,
   getProfileById,
@@ -10,10 +10,10 @@ import {
 
 const router = express.Router();
 
-router.get("/",  getAllProfiles);
-router.get("/:id",  getProfileById);
-router.post("/",  createProfile); // Hanya admin yang dapat membuat profil baru
-router.put("/:id",  updateProfile); // Hanya admin yang dapat memperbarui profil
-router.delete("/:id",  deleteProfile); // Hanya admin yang dapat menghapus profil
+router.get("/", authMiddleware, getAllProfiles);
+router.get("/:id", authMiddleware, getProfileById);
+router.post("/", authMiddleware, createProfile);
+router.put("/:id", authMiddleware, updateProfile);
+router.delete("/:id", authMiddleware, deleteProfile);
 
 export default router;

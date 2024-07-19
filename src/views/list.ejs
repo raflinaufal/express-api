@@ -1,0 +1,38 @@
+<%- include('partials/header', { title: title }) %>
+
+    <h1>
+        <%= title %>
+    </h1>
+    <a href="<%= newEntityUrl %>" class="btn btn-primary mb-3">Add New <%= entityType %></a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <% fields.forEach(field=> { %>
+                    <th>
+                        <%= field %>
+                    </th>
+                    <% }) %>
+                        <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% entities.forEach(entity=> { %>
+                <tr>
+                    <% fields.forEach(field=> { %>
+                        <td>
+                            <%= entity[field] %>
+                        </td>
+                        <% }) %>
+                            <td>
+                                <button onclick="editEntity('<%= entityType %>', '<%= entity.id %>')"
+                                    class="btn btn-warning btn-sm">Edit</button>
+                                <button onclick="deleteEntity('<%= entityType %>', '<%= entity.id %>')"
+                                    class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('modals', { entityType: entityType }) %>
+        <%- include('partials/footer') %>

@@ -1,5 +1,5 @@
 import express from "express";
-
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
   getAllBlogs,
   getBlogById,
@@ -10,10 +10,10 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllBlogs);
-router.get("/:id", getBlogById);
-router.post("/", createBlog); // Hanya admin yang dapat membuat blog baru
-router.put("/:id", updateBlog); // Hanya admin yang dapat memperbarui blog
-router.delete("/:id", deleteBlog); // Hanya admin yang dapat menghapus blog
+router.get("/", authMiddleware, getAllBlogs);
+router.get("/:id", authMiddleware, getBlogById);
+router.post("/", authMiddleware, createBlog);
+router.put("/:id", authMiddleware, updateBlog);
+router.delete("/:id", authMiddleware, deleteBlog);
 
 export default router;

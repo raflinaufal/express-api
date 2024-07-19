@@ -1,0 +1,38 @@
+<%- include('partials/header', { title: 'Manage Profiles' }) %>
+
+    <h1>Manage Profiles</h1>
+    <a href="/profiles/new" class="btn btn-primary mb-3">Add New Profile</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Address</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% profiles.forEach(profile=> { %>
+                <tr>
+                    <td>
+                        <%= profile.id %>
+                    </td>
+                    <td>
+                        <%= profile.fullName %>
+                    </td>
+                    <td>
+                        <%= profile.address %>
+                    </td>
+                    <td><img src="<%= profile.image %>" alt="Profile Image" width="50"></td>
+                    <td>
+                        <a href="/profiles/<%= profile.id %>/edit" class="btn btn-warning btn-sm">Edit</a>
+                        <button onclick="deleteProfile('<%= profile.id %>')"
+                            class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('partials/footer') %>

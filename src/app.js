@@ -35,11 +35,14 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use("/auth", authRoutes);
-
-app.use("/", dashboardRoutes);
+// app.use("/", dashboardRoutes);
 app.use("/users", userRoutes);
 app.use("/blogs", blogRoutes);
 app.use("/profiles", profileRoutes);
+
+app.get("/", (req, res) => {
+  res.redirect("/users");
+});
 
 app.use((req, res, next) => {
   res.status(404).render("404", { title: "404 - Page Not Found" });
