@@ -1,12 +1,12 @@
 import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
   getAllBlogs,
   getBlogById,
   createBlog,
   updateBlog,
   deleteBlog,
-} from "../controllers/blogController.js";
+} from "../../controllers/admin/blogController.js";
+import { authMiddleware } from "../../middleware/authMiddleware.js";
 
 const router = express.Router();
 

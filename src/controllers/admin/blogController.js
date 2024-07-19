@@ -1,18 +1,17 @@
-import * as blogService from "../services/blogService.js";
+import * as blogService from "../../services/blogService.js";
 
 export const getAllBlogs = async (req, res) => {
   try {
     const blogs = await blogService.getAllBlogs();
-    res.render("list", {
+    res.render("blogs/list", {
       title: "Manage Blogs",
       entities: blogs,
       entityType: "blog",
       fields: ["id", "title", "content", "image"],
-      newEntityUrl: "/blogs/new",
-      editEntityUrl: "/blogs",
+      newEntityUrl: "/admin/blogs/new",
+      editEntityUrl: "/admin/blogs",
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to fetch blogs" });
   }
 };
@@ -22,7 +21,6 @@ export const getBlogById = async (req, res) => {
     const blog = await blogService.getBlogById(req.params.id);
     res.json(blog);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to fetch blog" });
   }
 };
@@ -30,9 +28,8 @@ export const getBlogById = async (req, res) => {
 export const createBlog = async (req, res) => {
   try {
     await blogService.createBlog(req.body);
-    res.redirect("/blogs");
+    res.redirect("/admin/blogs");
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: "Failed to create blog" });
   }
 };
@@ -40,9 +37,8 @@ export const createBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
   try {
     await blogService.updateBlog({ ...req.body, id: req.params.id });
-    res.redirect("/blogs");
+    res.redirect("/admin/blogs");
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: "Failed to update blog" });
   }
 };
@@ -50,9 +46,8 @@ export const updateBlog = async (req, res) => {
 export const deleteBlog = async (req, res) => {
   try {
     await blogService.deleteBlog(req.params.id);
-    res.status(200).json({ success: true });
+    res.redirect("/admin/blogs");
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: "Failed to delete blog" });
   }
 };

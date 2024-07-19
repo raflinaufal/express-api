@@ -4,12 +4,12 @@ import {
   login,
   logout,
   checkSession,
-} from "../controllers/authController.js";
+} from "../../../controllers/api/auth/authController.js";
 import {
   userValidationRules,
   loginValidationRules,
-} from "../utils/validation.js";
-import redirectIfAuthenticated from "../middleware/redirectIfAuthenticated.js";
+} from "../../../utils/validation.js";
+import redirectIfAuthenticated from "../../../middleware/redirectIfAuthenticated.js";
 
 const router = express.Router();
 

@@ -1,7 +1,6 @@
 import prisma from "../utils/prismaClient.js";
 import { hashPassword } from "../utils/hashUtil.js";
 
-// Mendapatkan semua pengguna tanpa field password
 export const getAllUsers = async () => {
   return await prisma.user.findMany({
     select: {
@@ -15,7 +14,6 @@ export const getAllUsers = async () => {
   });
 };
 
-// Mendapatkan pengguna berdasarkan ID tanpa field password
 export const getUserById = async (id) => {
   return await prisma.user.findUnique({
     where: { id: parseInt(id, 10) },
@@ -30,9 +28,9 @@ export const getUserById = async (id) => {
   });
 };
 
-// Membuat pengguna baru tanpa field password dalam response
 export const createUser = async ({ email, password, name, role }) => {
   const hashedPassword = await hashPassword(password);
+
   return await prisma.user.create({
     data: {
       email,
@@ -51,7 +49,6 @@ export const createUser = async ({ email, password, name, role }) => {
   });
 };
 
-// Memperbarui pengguna tanpa field password dalam response
 export const updateUser = async ({ id, email, name, role }) => {
   return await prisma.user.update({
     where: { id: parseInt(id, 10) },
@@ -71,7 +68,6 @@ export const updateUser = async ({ id, email, name, role }) => {
   });
 };
 
-// Menghapus pengguna
 export const deleteUser = async (id) => {
   await prisma.user.delete({
     where: { id: parseInt(id, 10) },

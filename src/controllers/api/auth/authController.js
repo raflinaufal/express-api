@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
-import * as authService from "../services/authService.js";
-import { verifyToken } from "../utils/jwtUtil.js";
+import * as authService from "../../../services/authService.js";
+import { verifyToken } from "../../../utils/jwtUtil.js";
 
 export const register = async (req, res) => {
   const errors = validationResult(req);

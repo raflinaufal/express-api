@@ -5,11 +5,14 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-import authRoutes from "./routes/authRoutes.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
-import blogRoutes from "./routes/blogRoutes.js";
-import profileRoutes from "./routes/profileRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/api/auth/authRoutes.js";
+import apiUserRoutes from "./routes/api/userRoutes.js";
+import apiProfileRoutes from "./routes/api/profileRoutes.js";
+import apiBlogRoutes from "./routes/api/blogRoutes.js";
+import adminUserRoutes from "./routes/admin/userRoutes.js";
+import adminProfileRoutes from "./routes/admin/profileRoutes.js";
+import adminBlogRoutes from "./routes/admin/blogRoutes.js";
+import adminDashboardRoutes from "./routes/admin/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -27,25 +30,19 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { maxAge: 60000 }, // 1 hour
   })
 );
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
+app.use("/admin", adminDashboardRoutes); // Add this line
+app.use("/admin/users", adminUserRoutes);
+app.use("/admin/profiles", adminProfileRoutes);
+app.use("/admin/blogs", adminBlogRoutes);
+app.use("/api/users", apiUserRoutes);
+app.use("/api/profiles", apiProfileRoutes);
+app.use("/api/blogs", apiBlogRoutes);
 app.use("/auth", authRoutes);
-// app.use("/", dashboardRoutes);
-app.use("/users", userRoutes);
-app.use("/blogs", blogRoutes);
-app.use("/profiles", profileRoutes);
-
-app.get("/", (req, res) => {
-  res.redirect("/users");
-});
-
-app.use((req, res, next) => {
-  res.status(404).render("404", { title: "404 - Page Not Found" });
-});
 
 export default app;

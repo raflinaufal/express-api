@@ -1,0 +1,26 @@
+<%- include('../partials/header', { title: 'Add/Edit User' }) %>
+    <div class="container mt-4">
+        <h1>
+            <%= title %>
+        </h1>
+        <form action="<%= action %>" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= user ? user.email : '' %>"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= user ? user.name : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="user" <%=user && user.role==='user' ? 'selected' : '' %>>User</option>
+                    <option value="admin" <%=user && user.role==='admin' ? 'selected' : '' %>>Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+    <%- include('../partials/footer') %>
