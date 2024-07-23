@@ -1,0 +1,94 @@
+<div class="modal fade" id="profileEditModal" tabindex="-1" role="dialog" aria-labelledby="profileEditModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileEditModalLabel">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="profile-edit-form" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="existingImage" id="existingImage">
+                    <div class="form-group">
+                        <label for="editFullName">Full Name</label>
+                        <input type="text" class="form-control" id="editFullName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAddress">Address</label>
+                        <input type="text" class="form-control" id="editAddress" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editImage">Image</label>
+                        <input type="file" class="form-control" id="editImage" name="image">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editProfile(id) {
+        fetch(`/admin/profiles/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('profile-edit-form').action = `/admin/profiles/${id}?_method=PUT`;
+                document.querySelector('input[name="_method"]').value = 'PUT';
+                document.getElementById('editFullName').value = data.fullName;
+                document.getElementById('editAddress').value = data.address;
+                document.getElementById('existingImage').value = data.image;
+                $('#profileEditModal').modal('show');
+            })
+            .catch(error => {
+                console.error('Error fetching profile:', error);
+            });
+    }
+
+    document.getElementById('profileEditModal').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('profile-edit-form').reset();
+        document.getElementById('profile-edit-form').action = '';
+        document.querySelector('input[name="_method"]').value = '';
+    });
+
+    document.getElementById('profile-edit-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const actionUrl = this.action;
+
+        fetch(actionUrl, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    }).then(() => {
+                        $('#profileEditModal').modal('hide');
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `Failed to update profile: ${error.message}`,
+                });
+            });
+    });
+</script>

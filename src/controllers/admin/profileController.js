@@ -24,18 +24,25 @@ export const getProfileById = async (req, res) => {
 
 export const createProfile = async (req, res) => {
   try {
-    const { fullName, address, image } = req.body;
+    const { fullName, address } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
     await profileService.createProfile({ fullName, address, image });
     res.json({ success: true, message: "Profile created successfully" });
   } catch (error) {
-    console.error("Error creating profile:", error);
-    res.json({ success: false, message: "Failed to create profile" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create profile" });
   }
 };
 
 export const updateProfile = async (req, res) => {
   try {
-    const { fullName, address, image } = req.body;
+    const { fullName, address } = req.body;
+    const image = req.file
+      ? `/uploads/${req.file.filename}`
+      : req.body.existingImage;
+
     await profileService.updateProfile({
       id: req.params.id,
       fullName,
@@ -44,7 +51,9 @@ export const updateProfile = async (req, res) => {
     });
     res.json({ success: true, message: "Profile updated successfully" });
   } catch (error) {
-    res.json({ success: false, message: "Failed to update profile" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update profile" });
   }
 };
 

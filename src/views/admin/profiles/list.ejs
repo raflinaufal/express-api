@@ -1,16 +1,23 @@
-<%- include('../../layouts/adminLayout', { title: 'Manage Profiles' }) %>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
 
+<body>
     <div class="container mt-4">
-        <h1>
-            <%= title %>
-        </h1>
-        <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#profileModal">Add New Profile</a>
-
+        <h1>Manage Profiles</h1>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProfileModal">Add New Profile</button>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Full Name</th>
                     <th>Address</th>
                     <th>Image</th>
@@ -21,22 +28,22 @@
                 <% profiles.forEach(profile=> { %>
                     <tr>
                         <td>
-                            <%= profile.id %>
-                        </td>
-                        <td>
                             <%= profile.fullName %>
                         </td>
                         <td>
                             <%= profile.address %>
                         </td>
                         <td>
-                            <%= profile.image %>
+                            <% if (profile.image) { %>
+                                <img src="<%= profile.image %>" alt="Profile Image" width="50">
+                                <% } else { %>
+                                    No Image
+                                    <% } %>
                         </td>
                         <td>
-                            <button class="btn btn-warning btn-sm"
-                                onclick="editProfile('<%= profile.id %>')">Edit</button>
-                            <button class="btn btn-danger btn-sm"
-                                onclick="deleteProfile('<%= profile.id %>')">Delete</button>
+                            <button class="btn btn-warning" onclick="editProfile('<%= profile.id %>')">Edit</button>
+                            <button class="btn btn-danger"
+                                onclick="confirmDeleteProfile('<%= profile.id %>')">Delete</button>
                         </td>
                     </tr>
                     <% }) %>
@@ -44,4 +51,30 @@
         </table>
     </div>
 
-    <%- include('./modal') %>
+    <%- include('addModal') %>
+        <%- include('editModal') %>
+            <%- include('deleteModal') %>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script>
+                    if (window.location.search.includes('success=true')) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Operation completed successfully!',
+                        });
+                    }
+
+                    if (window.location.search.includes('error=true')) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong!',
+                        });
+                    }
+                </script>
+</body>
+
+</html>
