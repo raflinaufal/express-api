@@ -1,5 +1,5 @@
 ### Create User
-POST http://localhost:5000/auth/login
+POST http://localhost:5000/auth/logout
 Content-Type: application/json
 
 { 
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ### Get Profile by User ID
-GET http://localhost:5000/profiles/5
+GET http://localhost:5000/api/profiles
 Content-Type: application/json
 
 ### Create Blog

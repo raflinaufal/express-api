@@ -18,6 +18,7 @@ import adminBlogRoutes from "./routes/admin/blogRoutes.js";
 import adminDashboardRoutes from "./routes/admin/dashboardRoutes.js";
 import adminMiddleware from "./middleware/adminMiddleware.js";
 import authMiddleware from "./middleware/authMiddleware.js";
+import tokenMiddleware from "./middleware/tokenMiddleware.js";
 
 dotenv.config();
 
@@ -51,14 +52,14 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use("/api/users", authMiddleware, apiUserRoutes);
-app.use("/api/profiles", authMiddleware, apiProfileRoutes);
-app.use("/api/blogs", authMiddleware, apiBlogRoutes);
+app.use("/api/users", tokenMiddleware, apiUserRoutes);
+app.use("/api/profiles", tokenMiddleware, apiProfileRoutes);
+app.use("/api/blogs", tokenMiddleware, apiBlogRoutes);
 app.use("/auth", apiAuthRoutes);
 
-app.use("/admin", authMiddleware, adminMiddleware, adminDashboardRoutes);
-app.use("/admin/users", authMiddleware, adminMiddleware, adminUserRoutes);
-app.use("/admin/profiles", authMiddleware, adminMiddleware, adminProfileRoutes);
-app.use("/admin/blogs", authMiddleware, adminMiddleware, adminBlogRoutes);
+app.use("/admin", authMiddleware, adminDashboardRoutes);
+app.use("/admin/users", authMiddleware, adminUserRoutes);
+app.use("/admin/profiles", authMiddleware, adminProfileRoutes);
+app.use("/admin/blogs", authMiddleware, adminBlogRoutes);
 
 export default app;
