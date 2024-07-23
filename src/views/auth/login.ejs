@@ -1,115 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../partials/header') %>
 
-    <body class="bg-gradient-primary">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
 
-        <div class="container">
-
-            <!-- Outer Row -->
-            <div class="row justify-content-center">
-
-                <div class="col-xl-10 col-lg-12 col-md-9">
-
-                    <div class="card o-hidden border-0 shadow-lg my-5">
-                        <div class="card-body p-0">
-                            <!-- Nested Row within Card Body -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="p-5">
-                                        <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                        </div>
-                                        <form class="user" id="login-form" action="/auth/login" method="POST">
-                                            <div class="form-group">
-                                                <input type="email" class="form-control form-control-user" id="email"
-                                                    name="email" aria-describedby="emailHelp"
-                                                    placeholder="Enter Email Address...">
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="password" class="form-control form-control-user"
-                                                    id="password" name="password" placeholder="Password">
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox small">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                        id="customCheck">
-                                                    <label class="custom-control-label" for="customCheck">Remember
-                                                        Me</label>
-                                                </div>
-                                            </div>
-                                            <button type="submit"
-                                                class="btn btn-primary btn-user btn-block">Login</button>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
+<body>
+    <div class="container mt-5">
+        <h2>Login</h2>
+        <form id="login-form" action="/auth/login" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!-- CSRF token -->
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
             </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
 
-        </div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-        <%- include('../partials/footer') %>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const loginForm = document.getElementById("login-form");
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
 
-                    if (loginForm) {
-                        loginForm.addEventListener("submit", async (event) => {
-                            event.preventDefault();
-                            const email = document.getElementById("email").value;
-                            const password = document.getElementById("password").value;
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': data._csrf  // Include the CSRF token in the headers
+                    },
+                    body: JSON.stringify(data)
+                });
 
-                            try {
-                                const response = await fetch("/auth/login", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ email, password }),
-                                });
+                const result = await response.json();
 
-                                const data = await response.json();
-                                if (response.ok) {
-                                    // Check if the user has admin role
-                                    if (data.role === 'admin') {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Login Successful',
-                                            text: 'You have successfully logged in.',
-                                        }).then(() => {
-                                            window.location.href = "/admin";
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Access Denied',
-                                            text: 'You do not have permission to access the dashboard.',
-                                        });
-                                    }
-                                } else {
-                                    const errorMessages = data.errors.map(err => `<p>${err.msg}</p>`).join('');
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Login Failed',
-                                        html: errorMessages,
-                                    });
-                                }
-                            } catch (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Login Failed',
-                                    text: 'An error occurred while logging in',
-                                });
+                if (response.ok) {
+                    if (result.role !== "admin") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access denied',
+                            text: 'Only admin can access this page',
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Login Successful',
+                            text: 'You will be redirected shortly',
+                            timer: 2000,
+                            onOpen: () => {
+                                Swal.showLoading()
                             }
+                        }).then(() => {
+                            window.location.href = "/admin/dashboard";
                         });
                     }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.errors[0].msg,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong',
                 });
-            </script>
-    </body>
+            }
+        });
+    </script>
+</body>
 
 </html>

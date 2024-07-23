@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../partials/header') %>
 
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Session Expired',
-                    text: 'Your session has expired. Please login again.',
-                }).then(() => {
-                    window.location.href = "/auth/login";
-                });
-            });
-        </script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Session Expired</h1>
+        <p>Your session has expired. Please <a href="/auth/login">login</a> again.</p>
+    </div>
+</body>
 
 </html>

@@ -1,19 +1,38 @@
-<%- include('partials/header', { title: 'Admin Dashboard' }) %>
+<%- include('../layouts/adminLayout', { title: "Admin Dashboard" }) %>
+
     <div class="container mt-4">
         <h1>Admin Dashboard</h1>
+        <p>Selamat datang di dashboard admin!</p>
         <div class="row">
             <div class="col-md-4">
-                <h3>Users</h3>
-                <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Users</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Users</h5>
+                        <p class="card-text">Klik tombol di bawah untuk mengelola pengguna.</p>
+                        <a href="/admin/users" class="btn btn-light">Go to Users</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <h3>Profiles</h3>
-                <a href="/admin/profiles" class="btn btn-primary">Manage Profiles</a>
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Profiles</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Profiles</h5>
+                        <p class="card-text">Klik tombol di bawah untuk mengelola profil.</p>
+                        <a href="/admin/profiles" class="btn btn-light">Go to Profiles</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <h3>Blogs</h3>
-                <a href="/admin/blogs" class="btn btn-primary">Manage Blogs</a>
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Blogs</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Blogs</h5>
+                        <p class="card-text">Klik tombol di bawah untuk mengelola blog.</p>
+                        <a href="/admin/blogs" class="btn btn-light">Go to Blogs</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <%- include('partials/footer') %>

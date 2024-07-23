@@ -1,5 +1,3 @@
-export const renderDashboard = (req, res) => {
-  res.render("dashboard", {
-    title: "Admin Dashboard",
-  });
+export const showDashboard = (req, res) => {
+  res.render("admin/dashboard", { title: "Admin Dashboard" });
 };

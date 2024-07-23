@@ -1,53 +1,57 @@
-import * as blogService from "../../services/blogService.js";
+import * as profileService from "../../services/profileService.js";
 
-export const getAllBlogs = async (req, res) => {
+export const getAllProfiles = async (req, res) => {
   try {
-    const blogs = await blogService.getAllBlogs();
-    res.render("blogs/list", {
-      title: "Manage Blogs",
-      entities: blogs,
-      entityType: "blog",
-      fields: ["id", "title", "content", "image"],
-      newEntityUrl: "/admin/blogs/new",
-      editEntityUrl: "/admin/blogs",
+    const profiles = await profileService.getAllProfiles();
+    res.render("profiles/list", {
+      title: "Manage Profiles",
+      profiles,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch blogs" });
+    res.status(500).json({ error: "Failed to fetch profiles" });
   }
 };
 
-export const getBlogById = async (req, res) => {
+export const getProfileById = async (req, res) => {
   try {
-    const blog = await blogService.getBlogById(req.params.id);
-    res.json(blog);
+    const profile = await profileService.getProfileById(req.params.id);
+    res.render("profiles/detail", {
+      title: "Profile Details",
+      profile,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch blog" });
+    res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
 
-export const createBlog = async (req, res) => {
+export const createProfile = async (req, res) => {
   try {
-    await blogService.createBlog(req.body);
-    res.redirect("/admin/blogs");
+    const userId = req.user.userId; // Mengambil userId dari session yang didecode
+    const profile = await profileService.createProfile({ ...req.body, userId });
+    res.redirect("/admin/profiles");
   } catch (error) {
-    res.status(400).json({ error: "Failed to create blog" });
+    console.error("Error creating profile:", error);
+    res.status(400).json({ error: "Failed to create profile" });
   }
 };
 
-export const updateBlog = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
-    await blogService.updateBlog({ ...req.body, id: req.params.id });
-    res.redirect("/admin/blogs");
+    const profile = await profileService.updateProfile({
+      ...req.body,
+      id: req.params.id,
+    });
+    res.redirect("/admin/profiles");
   } catch (error) {
-    res.status(400).json({ error: "Failed to update blog" });
+    res.status(400).json({ error: "Failed to update profile" });
   }
 };
 
-export const deleteBlog = async (req, res) => {
+export const deleteProfile = async (req, res) => {
   try {
-    await blogService.deleteBlog(req.params.id);
-    res.redirect("/admin/blogs");
+    await profileService.deleteProfile(req.params.id);
+    res.redirect("/admin/profiles");
   } catch (error) {
-    res.status(400).json({ error: "Failed to delete blog" });
+    res.status(400).json({ error: "Failed to delete profile" });
   }
 };

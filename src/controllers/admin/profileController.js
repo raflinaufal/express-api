@@ -3,13 +3,10 @@ import * as profileService from "../../services/profileService.js";
 export const getAllProfiles = async (req, res) => {
   try {
     const profiles = await profileService.getAllProfiles();
-    res.render("profiles/list", {
+    res.render("admin/profiles/list", {
       title: "Manage Profiles",
-      entities: profiles,
-      entityType: "profile",
-      fields: ["id", "fullName", "address", "image"],
-      newEntityUrl: "/admin/profiles/new",
-      editEntityUrl: "/admin/profiles",
+      content: "Manage Profiles",
+      profiles,
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch profiles" });
@@ -27,27 +24,37 @@ export const getProfileById = async (req, res) => {
 
 export const createProfile = async (req, res) => {
   try {
-    await profileService.createProfile(req.body);
-    res.redirect("/admin/profiles");
+    const { fullName, address, image } = req.body;
+    await profileService.createProfile({ fullName, address, image });
+    res.json({ success: true, message: "Profile created successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to create profile" });
+    console.error("Error creating profile:", error);
+    res.json({ success: false, message: "Failed to create profile" });
   }
 };
 
 export const updateProfile = async (req, res) => {
   try {
-    await profileService.updateProfile({ ...req.body, id: req.params.id });
-    res.redirect("/admin/profiles");
+    const { fullName, address, image } = req.body;
+    await profileService.updateProfile({
+      id: req.params.id,
+      fullName,
+      address,
+      image,
+    });
+    res.json({ success: true, message: "Profile updated successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to update profile" });
+    res.json({ success: false, message: "Failed to update profile" });
   }
 };
 
 export const deleteProfile = async (req, res) => {
   try {
     await profileService.deleteProfile(req.params.id);
-    res.redirect("/admin/profiles");
+    res.json({ success: true, message: "Profile deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to delete profile" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to delete profile" });
   }
 };

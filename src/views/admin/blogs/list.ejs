@@ -1,0 +1,43 @@
+<%- include('../../layouts/adminLayout') %>
+
+    <div class="container mt-4">
+        <h1>Manage Blogs</h1>
+        <button class="btn btn-primary mb-3" onclick="showNewEntityModal()">Add New Blog</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% blogs.forEach(blog=> { %>
+                    <tr>
+                        <td>
+                            <%= blog.id %>
+                        </td>
+                        <td>
+                            <%= blog.title %>
+                        </td>
+                        <td>
+                            <%= blog.content %>
+                        </td>
+                        <td>
+                            <%= blog.image %>
+                        </td>
+                        <td>
+                            <button onclick="showEditEntityModal('blog', '<%= blog.id %>')"
+                                class="btn btn-warning btn-sm">Edit</button>
+                            <button onclick="deleteEntity('blog', '<%= blog.id %>')"
+                                class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('../../partials/modal') %>

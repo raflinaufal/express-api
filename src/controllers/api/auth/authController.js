@@ -11,9 +11,10 @@ export const register = async (req, res) => {
   }
 
   const { email, password, name } = req.body;
+  const role = "user";
 
   try {
-    const user = await authService.register({ email, password, name });
+    const user = await authService.register({ email, password, name, role });
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ errors: [{ msg: error.message }] });
@@ -34,8 +35,10 @@ export const login = async (req, res) => {
     const token = await authService.login({ email, password });
     req.session.token = token; // Save token to session
     const decoded = verifyToken(token);
-    req.session.user = decoded; // Save user info to session
-    res.json({ token, role: decoded.role });
+    res.json({
+      success: true,
+      role: decoded.role,
+    });
   } catch (error) {
     res.status(401).json({ errors: [{ msg: error.message }] });
   }

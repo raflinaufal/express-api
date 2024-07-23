@@ -20,8 +20,8 @@ export const getProfileById = async (req, res) => {
 
 export const createProfile = async (req, res) => {
   try {
-    await profileService.createProfile(req.body);
-    res.status(200).json({ message: "Profile created successfully" });
+    const profile = await profileService.createProfile(req.body);
+    res.status(201).json(profile);
   } catch (error) {
     res.status(400).json({ error: "Failed to create profile" });
   }
@@ -29,8 +29,11 @@ export const createProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    await profileService.updateProfile({ ...req.body, id: req.params.id });
-    res.status(200).json({ message: "Profile updated successfully" });
+    const profile = await profileService.updateProfile({
+      ...req.body,
+      id: req.params.id,
+    });
+    res.json(profile);
   } catch (error) {
     res.status(400).json({ error: "Failed to update profile" });
   }
@@ -39,7 +42,7 @@ export const updateProfile = async (req, res) => {
 export const deleteProfile = async (req, res) => {
   try {
     await profileService.deleteProfile(req.params.id);
-    res.status(200).json({ success: true });
+    res.json({ success: true });
   } catch (error) {
     res.status(400).json({ error: "Failed to delete profile" });
   }

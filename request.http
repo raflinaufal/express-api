@@ -1,12 +1,12 @@
 ### Create User
-POST http://localhost:5000/auth/register
+POST http://localhost:5000/auth/login
 Content-Type: application/json
 
-{
-  "email": "rafli1@example.com",
-  "password": "password123",
-  "role": "admin"
+{ 
+  "email": "rafli@example.com",
+  "password": "password123"
 }
+
 
 ### Get All Users
 GET http://localhost:5000/api/users
@@ -31,13 +31,14 @@ DELETE http://localhost:5000/users/1
 Content-Type: application/json
 
 ### Create or Update Profile
-POST http://localhost:5000/profiles/5
+POST http://localhost:5000/api/profiles/
 Content-Type: application/json
 
 {
   "fullName": "rafli",
   "address": "123 Main St",
-  "image": "http://example.com/image.jpg"
+  "image": "http://example.com/image.jpg",
+  "userId" : 5
 }
 
 ### Get Profile by User ID

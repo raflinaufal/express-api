@@ -2,12 +2,12 @@ import prisma from "../utils/prismaClient.js";
 import { hashPassword, comparePassword } from "../utils/hashUtil.js";
 import { generateToken, verifyToken } from "../utils/jwtUtil.js";
 
-export const register = async ({ email, password, name }) => {
+export const register = async ({ email, password, name, role = "user" }) => {
   const hashedPassword = await hashPassword(password);
 
   try {
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name, role: "user" },
+      data: { email, password: hashedPassword, name, role },
     });
     return user;
   } catch (error) {
