@@ -1,17 +1,30 @@
 import prisma from "../utils/prismaClient.js";
 import { hashPassword, comparePassword } from "../utils/hashUtil.js";
-import { generateToken, verifyToken } from "../utils/jwtUtil.js";
+import { generateToken } from "../utils/jwtUtil.js";
 
-export const register = async ({ email, password, name, role = "user" }) => {
+export const register = async ({ email, password, name, role }) => {
   const hashedPassword = await hashPassword(password);
 
   try {
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name, role },
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     return user;
   } catch (error) {
-    throw new Error("Email already exists"); // Pesan kesalahan spesifik
+    throw new Error("Email already exists"); // Specific error message
   }
 };
 
@@ -29,8 +42,4 @@ export const login = async ({ email, password }) => {
 
   const token = generateToken(user);
   return token;
-};
-
-export const decodeToken = (token) => {
-  return verifyToken(token);
 };

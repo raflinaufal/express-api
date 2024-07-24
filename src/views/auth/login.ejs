@@ -13,7 +13,6 @@
     <div class="container mt-5">
         <h2>Login</h2>
         <form id="login-form" action="/auth/login" method="post">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!-- CSRF token -->
             <div class="form-group">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -38,8 +37,7 @@
                 const response = await fetch(form.action, {
                     method: form.method,
                     headers: {
-                        'Content-Type': 'application/json',
-                        'CSRF-Token': data._csrf  // Include the CSRF token in the headers
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
                 });
@@ -47,25 +45,17 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    if (result.role !== "admin") {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Access denied',
-                            text: 'Only admin can access this page',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Login Successful',
-                            text: 'You will be redirected shortly',
-                            timer: 2000,
-                            onOpen: () => {
-                                Swal.showLoading()
-                            }
-                        }).then(() => {
-                            window.location.href = "/admin/dashboard";
-                        });
-                    }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Successful',
+                        text: 'You will be redirected shortly',
+                        timer: 2000,
+                        onOpen: () => {
+                            Swal.showLoading()
+                        }
+                    }).then(() => {
+                        window.location.href = "/admin/dashboard";
+                    });
                 } else {
                     Swal.fire({
                         icon: 'error',

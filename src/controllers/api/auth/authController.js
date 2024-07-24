@@ -15,9 +15,11 @@ export const register = async (req, res) => {
 
   try {
     const user = await authService.register({ email, password, name, role });
-    res.status(201).json(user);
+    res
+      .status(201)
+      .json({ success: true, message: "User registered successfully", user });
   } catch (error) {
-    res.status(400).json({ errors: [{ msg: error.message }] });
+    res.status(400).json({ success: false, errors: [{ msg: error.message }] });
   }
 };
 
@@ -34,13 +36,13 @@ export const login = async (req, res) => {
   try {
     const token = await authService.login({ email, password });
     req.session.token = token; // Save token to session
-    const decoded = verifyToken(token);
     res.json({
       success: true,
-      role: decoded.role,
+      message: "Login successful",
+      token,
     });
   } catch (error) {
-    res.status(401).json({ errors: [{ msg: error.message }] });
+    res.status(401).json({ success: false, errors: [{ msg: error.message }] });
   }
 };
 

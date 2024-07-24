@@ -2,10 +2,9 @@
 POST http://localhost:5000/auth/register
 Content-Type: application/json
 
-{ "fullName" : "rafli",
-  "email": "user@example.com",
-  "password": "password123",
-  "role" : "user",
+{ 
+  "email": "rafli@example.com",
+  "password": "password123"
 }
 
 
@@ -39,25 +38,11 @@ Content-Type: application/json
   "fullName": "rafli",
   "address": "123 Main St",
   "image": "http://example.com/image.jpg",
-  
+  "userId" : 5
 }
-### GET
-GET http://localhost:5000/api/profiles/
-Content-Type: application/json
-
-### Membuat profil baru
-POST http://localhost:5000/api/profiles
-Content-Type: multipart/form-data
-
-
-{
-  
-}
-
-
 
 ### Get Profile by User ID
-GET http://localhost:5000/admin/profiles
+GET http://localhost:5000/api/profiles
 Content-Type: application/json
 
 ### Create Blog
