@@ -30,9 +30,9 @@ export const getProfileById = async (id) => {
 export const createProfile = async ({ fullName, address, image }) => {
   return await prisma.profile.create({
     data: {
-      fullName: fullName || null,
-      address: address || null,
-      image: image || null,
+      fullName: fullName,
+      address: address,
+      image: image,
     },
     select: {
       id: true,
@@ -49,9 +49,9 @@ export const updateProfile = async ({ id, fullName, address, image }) => {
   return await prisma.profile.update({
     where: { id: parseInt(id, 10) },
     data: {
-      fullName: fullName || null,
-      address: address || null,
-      image: image || null,
+      fullName: fullName,
+      address: address,
+      image: image,
     },
     select: {
       id: true,

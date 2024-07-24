@@ -1,5 +1,5 @@
 ### Create User
-POST http://localhost:5000/auth/logout
+POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 { 
@@ -38,11 +38,25 @@ Content-Type: application/json
   "fullName": "rafli",
   "address": "123 Main St",
   "image": "http://example.com/image.jpg",
-  "userId" : 5
+  
+}
+### GET
+GET http://localhost:5000/api/profiles/
+Content-Type: application/json
+
+### Membuat profil baru
+POST http://localhost:5000/api/profiles
+Content-Type: multipart/form-data
+
+
+{
+  
 }
 
+
+
 ### Get Profile by User ID
-GET http://localhost:5000/api/profiles
+GET http://localhost:5000/admin/profiles
 Content-Type: application/json
 
 ### Create Blog
