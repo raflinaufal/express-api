@@ -18,29 +18,26 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const createUser = async (req, res) => {
-  try {
-    await userService.createUser(req.body);
-    res.status(200).json({ message: "User created successfully" });
-  } catch (error) {
-    res.status(400).json({ error: "Failed to create user" });
-  }
-};
-
 export const updateUser = async (req, res) => {
   try {
-    await userService.updateUser({ ...req.body, id: req.params.id });
-    res.status(200).json({ message: "User updated successfully" });
+    const { email, name, role } = req.body;
+    const user = await userService.updateUser({
+      id: req.params.id,
+      email,
+      name,
+      role,
+    });
+    res.json({ success: true, message: "User updated successfully", user });
   } catch (error) {
-    res.status(400).json({ error: "Failed to update user" });
+    res.status(500).json({ success: false, message: "Failed to update user" });
   }
 };
 
 export const deleteUser = async (req, res) => {
   try {
     await userService.deleteUser(req.params.id);
-    res.status(200).json({ success: true });
+    res.json({ success: true, message: "User deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to delete user" });
+    res.status(500).json({ success: false, message: "Failed to delete user" });
   }
 };

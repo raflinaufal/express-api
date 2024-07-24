@@ -1,10 +1,11 @@
 ### Create User
-POST http://localhost:5000/auth/login
+POST http://localhost:5000/auth/register
 Content-Type: application/json
 
-{ 
-  "email": "rafli@example.com",
-  "password": "password123"
+{ "fullName" : "rafli",
+  "email": "user@example.com",
+  "password": "password123",
+  "role" : "user",
 }
 
 
