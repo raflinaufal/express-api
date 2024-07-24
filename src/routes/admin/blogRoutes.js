@@ -1,13 +1,19 @@
 import express from "express";
-
-import { authMiddleware } from "../../middleware/authMiddleware.js";
+import {
+  getAllBlogs,
+  getBlogById,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+} from "../../controllers/admin/blogController.js";
+import upload from "../../config/multerConfig.js"; // Assuming multerConfig.js is configured
 
 const router = express.Router();
 
-// API routes
-router.get("/:id", authMiddleware);
-router.post("/", authMiddleware);
-router.put("/:id", authMiddleware);
-router.delete("/:id", authMiddleware);
+router.get("/", getAllBlogs);
+router.get("/:id", getBlogById);
+router.post("/", upload.single("image"), createBlog);
+router.put("/:id", upload.single("image"), updateBlog);
+router.delete("/:id", deleteBlog);
 
 export default router;

@@ -1,6 +1,5 @@
 import prisma from "../utils/prismaClient.js";
 
-// Mendapatkan semua blog tanpa menyertakan data penulis terkait
 export const getAllBlogs = async () => {
   return await prisma.blog.findMany({
     select: {
@@ -10,11 +9,15 @@ export const getAllBlogs = async () => {
       image: true,
       createdAt: true,
       updatedAt: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
 
-// Mendapatkan blog berdasarkan ID tanpa menyertakan data penulis terkait
 export const getBlogById = async (id) => {
   return await prisma.blog.findUnique({
     where: { id: parseInt(id, 10) },
@@ -25,21 +28,18 @@ export const getBlogById = async (id) => {
       image: true,
       createdAt: true,
       updatedAt: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
 
-// Membuat blog baru
 export const createBlog = async ({ title, content, image, authorId }) => {
   return await prisma.blog.create({
-    data: {
-      title,
-      content,
-      image,
-      author: {
-        connect: { id: authorId }, // Mengaitkan dengan pengguna terkait
-      },
-    },
+    data: { title, content, image, authorId },
     select: {
       id: true,
       title: true,
@@ -51,15 +51,10 @@ export const createBlog = async ({ title, content, image, authorId }) => {
   });
 };
 
-// Memperbarui blog
 export const updateBlog = async ({ id, title, content, image }) => {
   return await prisma.blog.update({
     where: { id: parseInt(id, 10) },
-    data: {
-      title,
-      content,
-      image,
-    },
+    data: { title, content, image },
     select: {
       id: true,
       title: true,
@@ -71,7 +66,6 @@ export const updateBlog = async ({ id, title, content, image }) => {
   });
 };
 
-// Menghapus blog
 export const deleteBlog = async (id) => {
   await prisma.blog.delete({
     where: { id: parseInt(id, 10) },

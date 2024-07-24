@@ -1,57 +1,67 @@
-import * as profileService from "../../services/profileService.js";
+import * as blogService from "../../services/blogService.js";
 
-export const getAllProfiles = async (req, res) => {
+export const getAllBlogs = async (req, res) => {
   try {
-    const profiles = await profileService.getAllProfiles();
-    res.render("profiles/list", {
-      title: "Manage Profiles",
-      profiles,
+    const blogs = await blogService.getAllBlogs();
+    res.render("admin/blogs/list", {
+      title: "Manage Blogs",
+      blogs,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch profiles" });
+    res.status(500).json({ error: "Failed to fetch blogs" });
   }
 };
 
-export const getProfileById = async (req, res) => {
+export const getBlogById = async (req, res) => {
   try {
-    const profile = await profileService.getProfileById(req.params.id);
-    res.render("profiles/detail", {
-      title: "Profile Details",
-      profile,
+    const blog = await blogService.getBlogById(req.params.id);
+    res.json(blog);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch blog" });
+  }
+};
+
+export const createBlog = async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const authorId = req.user.userId; // Assuming user ID is in token
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    await blogService.createBlog({
+      title,
+      content,
+      image,
+      authorId,
     });
+    res.json({ success: true, message: "Blog created successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch profile" });
+    res.status(500).json({ success: false, message: "Failed to create blog" });
   }
 };
 
-export const createProfile = async (req, res) => {
+export const updateBlog = async (req, res) => {
   try {
-    const userId = req.user.userId; // Mengambil userId dari session yang didecode
-    const profile = await profileService.createProfile({ ...req.body, userId });
-    res.redirect("/admin/profiles");
-  } catch (error) {
-    console.error("Error creating profile:", error);
-    res.status(400).json({ error: "Failed to create profile" });
-  }
-};
+    const { title, content } = req.body;
+    const image = req.file
+      ? `/uploads/${req.file.filename}`
+      : req.body.existingImage;
 
-export const updateProfile = async (req, res) => {
-  try {
-    const profile = await profileService.updateProfile({
-      ...req.body,
+    await blogService.updateBlog({
       id: req.params.id,
+      title,
+      content,
+      image,
     });
-    res.redirect("/admin/profiles");
+    res.json({ success: true, message: "Blog updated successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to update profile" });
+    res.status(500).json({ success: false, message: "Failed to update blog" });
   }
 };
 
-export const deleteProfile = async (req, res) => {
+export const deleteBlog = async (req, res) => {
   try {
-    await profileService.deleteProfile(req.params.id);
-    res.redirect("/admin/profiles");
+    await blogService.deleteBlog(req.params.id);
+    res.json({ success: true, message: "Blog deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to delete profile" });
+    res.status(500).json({ success: false, message: "Failed to delete blog" });
   }
 };

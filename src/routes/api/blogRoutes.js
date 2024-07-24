@@ -6,13 +6,14 @@ import {
   updateBlog,
   deleteBlog,
 } from "../../controllers/api/blogController.js";
+import upload from "../../config/multerConfig.js"; // Assuming multerConfig.js is configured
 
 const router = express.Router();
 
 router.get("/", getAllBlogs);
 router.get("/:id", getBlogById);
-router.post("/", createBlog);
-router.put("/:id", updateBlog);
+router.post("/", upload.single("image"), createBlog);
+router.put("/:id", upload.single("image"), updateBlog);
 router.delete("/:id", deleteBlog);
 
 export default router;

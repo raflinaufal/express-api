@@ -1,0 +1,54 @@
+<div class="modal fade" id="createBlogModal" tabindex="-1" role="dialog" aria-labelledby="createBlogModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createBlogModalLabel">Add Blog</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-blog-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="create-title">Title</label>
+                        <input type="text" class="form-control" id="create-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-content">Content</label>
+                        <textarea class="form-control" id="create-content" name="content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-image">Image</label>
+                        <input type="file" class="form-control" id="create-image" name="image">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('create-blog-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        try {
+            const response = await fetch('/admin/blogs', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            if (result.success) {
+                Swal.fire('Success', result.message, 'success').then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Something went wrong', 'error');
+        }
+    });
+</script>

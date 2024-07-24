@@ -20,27 +20,45 @@ export const getBlogById = async (req, res) => {
 
 export const createBlog = async (req, res) => {
   try {
-    await blogService.createBlog(req.body);
-    res.status(200).json({ message: "Blog created successfully" });
+    const { title, content } = req.body;
+    const authorId = req.user.userId; // Assuming user ID is in token
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    await blogService.createBlog({
+      title,
+      content,
+      image,
+      authorId,
+    });
+    res.json({ success: true, message: "Blog created successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to create blog" });
+    res.status(500).json({ success: false, message: "Failed to create blog" });
   }
 };
 
 export const updateBlog = async (req, res) => {
   try {
-    await blogService.updateBlog({ ...req.body, id: req.params.id });
-    res.status(200).json({ message: "Blog updated successfully" });
+    const { title, content } = req.body;
+    const image = req.file
+      ? `/uploads/${req.file.filename}`
+      : req.body.existingImage;
+
+    await blogService.updateBlog({
+      id: req.params.id,
+      title,
+      content,
+      image,
+    });
+    res.json({ success: true, message: "Blog updated successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to update blog" });
+    res.status(500).json({ success: false, message: "Failed to update blog" });
   }
 };
 
 export const deleteBlog = async (req, res) => {
   try {
     await blogService.deleteBlog(req.params.id);
-    res.status(200).json({ success: true });
+    res.json({ success: true, message: "Blog deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Failed to delete blog" });
+    res.status(500).json({ success: false, message: "Failed to delete blog" });
   }
 };

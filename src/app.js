@@ -16,7 +16,7 @@ import adminUserRoutes from "./routes/admin/userRoutes.js";
 import adminProfileRoutes from "./routes/admin/profileRoutes.js";
 import adminBlogRoutes from "./routes/admin/blogRoutes.js";
 import adminDashboardRoutes from "./routes/admin/dashboardRoutes.js";
-import adminMiddleware from "./middleware/adminMiddleware.js";
+
 import authMiddleware from "./middleware/authMiddleware.js";
 import tokenMiddleware from "./middleware/tokenMiddleware.js";
 
@@ -39,7 +39,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // 1 hour
+    cookie: { secure: "auto" },
   })
 );
 

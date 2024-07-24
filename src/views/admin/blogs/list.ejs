@@ -1,12 +1,21 @@
-<%- include('../../layouts/adminLayout') %>
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="container mt-4">
-        <h1>Manage Blogs</h1>
-        <button class="btn btn-primary mb-3" onclick="showNewEntityModal()">Add New Blog</button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Blogs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Manage Blogs</h2>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#createBlogModal">Add New Blog</button>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Title</th>
                     <th>Content</th>
                     <th>Image</th>
@@ -17,22 +26,17 @@
                 <% blogs.forEach(blog=> { %>
                     <tr>
                         <td>
-                            <%= blog.id %>
-                        </td>
-                        <td>
                             <%= blog.title %>
                         </td>
                         <td>
                             <%= blog.content %>
                         </td>
+                        <td><img src="<%= blog.image %>" alt="<%= blog.title %>" width="100"></td>
                         <td>
-                            <%= blog.image %>
-                        </td>
-                        <td>
-                            <button onclick="showEditEntityModal('blog', '<%= blog.id %>')"
-                                class="btn btn-warning btn-sm">Edit</button>
-                            <button onclick="deleteEntity('blog', '<%= blog.id %>')"
-                                class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-info"
+                                onclick="editBlog('<%= blog.id %>')">Edit</button>
+                            <button type="button" class="btn btn-danger"
+                                onclick="confirmDeleteBlog('<%= blog.id %>')">Delete</button>
                         </td>
                     </tr>
                     <% }) %>
@@ -40,4 +44,12 @@
         </table>
     </div>
 
-    <%- include('../../partials/modal') %>
+    <%- include('addModal') %>
+        <%- include('editModal') %>
+            <%- include('deleteModal') %>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
